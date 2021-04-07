@@ -1,0 +1,7 @@
+uPacket	KEYWORD1
+begin	KEYWORD2
+recv_packet	KEYWORD2
+send_packet	KEYWORD2
+bit_decode	KEYWORD2
+bit_encode	KEYWORD2
+get_crc	KEYWORD2
