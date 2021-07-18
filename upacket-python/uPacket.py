@@ -144,7 +144,7 @@ class up():
         except serial.SerialException:
             return self.CONNECT_FALSE
 
-    def connect_net(self, address, port, timeout):
+    def connect_net(self, address, port, timeout, connect_timeout=5):
         """
         Connects to controller over TCP network.
         
@@ -154,9 +154,12 @@ class up():
             IP address of the controller to connect to(eg "10.0.0.1")
         port : int
             Port number of controller to connect to(eg 1336)
-        Timeout : number
+        timeout : number
             Time in seconds network functions will wait before timing
             out.
+        connect_timeout(Optional) : number
+            Time in seconds a connection will wait for before timing
+            out. Default time is 5 seconds
 
         Returns
         -------
@@ -167,6 +170,7 @@ class up():
 
         self.coms = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
+            self.coms.settimeout(connect_timeout)
             self.coms.connect((address, port))
             self.coms.settimeout(timeout)
             self.coms_type = 1
