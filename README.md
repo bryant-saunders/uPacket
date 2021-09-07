@@ -75,7 +75,7 @@ The protocol replaces delimiter characters with a dummy value for transmission. 
 I used the built python module(perf_counter) for timing round trip packet time. I used a NodeMCU esp8266 for hardware. For a serial connection at 115200 baud with a 32 byte payload sent and received, it took a little under 2mS. For a WiFi connection with the same send/receive payloads(32 bytes), it took less than one mS.
 
 ## What does the packet structure look like?
-Delimiter(1 byte) + CRC(2 bytes) + Payload(1-32 bytes) + Delimiter(1 byte)
+Delimiter(1 byte) + CRC(2 bytes) + Bitmap(4 Bytes) + Payload(1-32 bytes) + Delimiter(1 byte)
 
 # Documentation
 The Python code is well documented in the form of docstrings. The Arduino code has useful information in the uPacket.cpp file. The examples are a good place to find general usage guidelines.
