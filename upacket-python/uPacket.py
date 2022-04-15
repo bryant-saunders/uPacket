@@ -45,8 +45,9 @@ class up():
         Used to denote if connection type is network or serial.
         1 = Network communications. 0 = Serial communications.
         This variable will be automatically selected based on a
-        successful call to any of the connect() functions       
+        successfull call to any of the connect() functions       
     """
+
     #Status code constants
     CONNECT_FALSE = 0
     CONNECT_TRUE  = 1
@@ -61,12 +62,12 @@ class up():
     #Constants
     DELIM_CHAR    = b'|'
     REPLACE_CHAR  = b'+'
-
-    
+   
     def __init__(self):
         """
         Initializes the instance variables.
         """
+
         self.wait_time = 3
         self.coms = 0
         self.coms_type = 0
@@ -206,13 +207,15 @@ class up():
         reply = self.bit_encode(packet)
         bitmap = struct.pack('>I', reply[0])
         packet = reply[1]
-        if self.coms_type == 0:
+
+        if self.coms_type == 0: #If serial
             try:                    
                 self.coms.write(self.DELIM_CHAR + crc_bytes + bitmap
                                 + packet + self.DELIM_CHAR)
             except serial.SerialException:
                 return self.ERR_SER_PORT
-        if self.coms_type == 1:
+
+        if self.coms_type == 1: #If socket
             try:
                 self.coms.sendall(self.DELIM_CHAR + crc_bytes + bitmap 
                                   + packet + self.DELIM_CHAR)
@@ -242,7 +245,7 @@ class up():
         """
 
         if self.coms == 0:
-             return [self.ERR_INIT, b' ']
+            return [self.ERR_INIT, b' ']
         packet = bytearray()
         if self.coms_type == 0:
             try:
@@ -251,9 +254,8 @@ class up():
             except serial.SerialException:
                 return [self.ERR_SER_PORT, b' ']   
             try:
-                packet = self.coms.read_until(self.DELIM_CHAR)
-                if packet == self.DELIM_CHAR:
-                    packet = self.coms.read_until(self.DELIM_CHAR)
+                packet = self.coms.read(6)
+                packet += (self.coms.read_until(self.DELIM_CHAR))               
             except serial.SerialException:
                 return [self.ERR_SER_PORT, b' ']
 
@@ -270,20 +272,20 @@ class up():
                     bytes_read += 1
                 except:
                     return [self.ERR_TIMEOUT, b' ']
-                if current_byte == self.DELIM_CHAR and bytes_read > 1:
+                if current_byte == self.DELIM_CHAR and bytes_read > 6:
                     packet.append(ord(current_byte))
                     break
                 else:
                     packet.append(ord(current_byte))
         if len(packet) < 7:
-            return [self.ERR_TIMEOUT, b' ']
+            return [self.ERR_TIMEOUT, b' ']       
         packet = packet[0:len(packet) - 1]#discard delim char
         if len(packet) > 32:
             return [self.PACK_TOO_BIG, b' ']        
         check_raw = packet[0:2]
         recv_check = struct.unpack('>H', check_raw)
         bitmap_raw = packet[2:6]
-        bitmap = struct.unpack('>I', bitmap_raw)
+        bitmap = struct.unpack('>I', bitmap_raw)        
         decoded_packet = bytes(self.bit_decode(bitmap[0], packet[6:len(packet)]))       
         calc_check = self.get_crc(decoded_packet)
         if calc_check != recv_check[0]:
@@ -295,6 +297,7 @@ class up():
         Closes a serial or network connection.
 
         """
+
         if self.coms != 0:
             self.coms.close()
         self.coms = 0
@@ -314,6 +317,7 @@ class up():
             6 = No serial data waiting
             7 = Serial data waiting           
         """
+
         if self.coms == 0:
             return self.ERR_INIT
         try:
