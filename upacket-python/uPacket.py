@@ -280,7 +280,7 @@ class up():
         if len(packet) < 7:
             return [self.ERR_TIMEOUT, b' ']       
         packet = packet[0:len(packet) - 1]#discard delim char
-        if len(packet) > 32:
+        if len(packet) > 38:
             return [self.PACK_TOO_BIG, b' ']        
         check_raw = packet[0:2]
         recv_check = struct.unpack('>H', check_raw)
