@@ -9,9 +9,9 @@ uPacket is a protocol used to exchange small messages between Python and a compa
 
 
 ## Arduino library tested on
-* Arduino(ATmega328)
+* Arduino(ATmega328, Nano Every)
 * ESP8266(D1 Mini, NodeMCU)
-* ESP32(TTGO Feather)
+* ESP32(TTGO Feather, ESP32 Cam, ESP32 "Node MCU")
 * SAMD21(SEEED XIAO)
 
 
